@@ -1,0 +1,607 @@
+<!doctype html>
+<html lang="id" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analisis Spasial SIG Kota Samarinda</title>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    html, body {
+      height: 100%;
+      width: 100%;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      line-height: 1.7;
+      color: #1a202c;
+      background: linear-gradient(180deg, #ffffff 0%, #f7fafc 100%);
+      overflow-y: auto;
+    }
+    
+    .main-container {
+      width: 100%;
+      min-height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    /* Header Section */
+    .header-section {
+      background: linear-gradient(135deg, #1e3a20 0%, #2d5f2d 50%, #4a8c4e 100%);
+      color: white;
+      padding: 120px 32px 100px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .header-section::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+      background-size: 50px 50px;
+      opacity: 0.4;
+      animation: float 20s linear infinite;
+    }
+    
+    .header-section::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 100px;
+      background: linear-gradient(to top, rgba(255,255,255,0.15), transparent);
+    }
+    
+    @keyframes float {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(50px, 50px); }
+    }
+    
+    .header-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      padding: 10px 24px;
+      border-radius: 30px;
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 24px;
+      position: relative;
+      z-index: 2;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .header-title {
+      font-size: 52px;
+      font-weight: 700;
+      margin-bottom: 24px;
+      letter-spacing: -1.5px;
+      position: relative;
+      z-index: 2;
+      line-height: 1.15;
+      text-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .header-subtitle {
+      font-size: 20px;
+      font-weight: 400;
+      opacity: 0.95;
+      max-width: 700px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+      line-height: 1.6;
+    }
+    
+    /* Content Wrapper */
+    .content-wrapper {
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 0 32px;
+      flex: 1;
+    }
+    
+    /* Section Styles */
+    .section {
+      padding: 120px 0;
+      position: relative;
+    }
+    
+    .section-header {
+      text-align: center;
+      margin-bottom: 64px;
+    }
+    
+    .section-label {
+      display: inline-block;
+      background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+      color: #2d5f2d;
+      padding: 8px 20px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .section-title {
+      font-size: 42px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: #1e3a20;
+      letter-spacing: -1px;
+      line-height: 1.2;
+    }
+    
+    .section-description {
+      font-size: 18px;
+      color: #4a5568;
+      margin-bottom: 0;
+      line-height: 1.8;
+      max-width: 850px;
+      margin: 0 auto;
+    }
+    
+    /* Map Styles */
+    .map-wrapper {
+      position: relative;
+      padding: 20px;
+      background: white;
+      border-radius: 28px;
+      box-shadow: 0 20px 60px rgba(30, 58, 32, 0.12);
+    }
+    
+    .map-container {
+      width: 100%;
+      height: 580px;
+      border-radius: 20px;
+      overflow: hidden;
+      border: none;
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+    
+    .map-wrapper:hover .map-container {
+      transform: scale(1.01);
+    }
+    
+    .map-container iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    
+    /* Two Column Layout */
+    .two-column-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+    
+    .two-column-layout.reverse {
+      direction: rtl;
+    }
+    
+    .two-column-layout.reverse > * {
+      direction: ltr;
+    }
+    
+    /* Image Card */
+    .image-card {
+      position: relative;
+      background: white;
+      padding: 20px;
+      border-radius: 28px;
+      box-shadow: 0 20px 60px rgba(30, 58, 32, 0.1);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .image-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 30px 80px rgba(30, 58, 32, 0.15);
+    }
+    
+    .map-image {
+      width: 100%;
+      height: auto;
+      border-radius: 20px;
+      display: block;
+      object-fit: cover;
+    }
+    
+    /* Text Content */
+    .text-content {
+      position: relative;
+    }
+    
+    .text-content-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+      color: #2d5f2d;
+      padding: 6px 16px;
+      border-radius: 16px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .text-content h3 {
+      font-size: 34px;
+      font-weight: 700;
+      margin-bottom: 24px;
+      color: #1e3a20;
+      letter-spacing: -0.8px;
+      line-height: 1.25;
+    }
+    
+    .text-content p {
+      font-size: 17px;
+      color: #4a5568;
+      line-height: 1.9;
+      text-align: justify;
+    }
+    
+    /* Divider */
+    .divider {
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    
+    .divider::before {
+      content: '';
+      position: absolute;
+      width: 100%;
+      max-width: 600px;
+      height: 2px;
+      background: linear-gradient(to right, transparent, rgba(30, 58, 32, 0.1), transparent);
+    }
+    
+    .divider-icon {
+      position: relative;
+      z-index: 1;
+      background: white;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      box-shadow: 0 4px 20px rgba(30, 58, 32, 0.08);
+      color: #2d5f2d;
+    }
+    
+    /* Footer */
+    .footer-section {
+      background: linear-gradient(135deg, #1e3a20 0%, #2d5f2d 100%);
+      color: white;
+      text-align: center;
+      padding: 48px 32px;
+      margin-top: auto;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .footer-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.2), transparent);
+    }
+    
+    .footer-text {
+      font-size: 15px;
+      opacity: 0.9;
+      font-weight: 400;
+      position: relative;
+      z-index: 1;
+    }
+    
+    /* Responsive Styles */
+    @media (max-width: 768px) {
+      .header-title {
+        font-size: 34px;
+        letter-spacing: -0.8px;
+      }
+      
+      .header-subtitle {
+        font-size: 17px;
+      }
+      
+      .header-section {
+        padding: 90px 24px 70px;
+      }
+      
+      .header-badge {
+        font-size: 12px;
+        padding: 8px 18px;
+      }
+      
+      .content-wrapper {
+        padding: 0 24px;
+      }
+      
+      .section {
+        padding: 80px 0;
+      }
+      
+      .section-header {
+        margin-bottom: 48px;
+      }
+      
+      .section-title {
+        font-size: 32px;
+      }
+      
+      .section-description {
+        font-size: 16px;
+      }
+      
+      .map-wrapper {
+        padding: 12px;
+        border-radius: 20px;
+      }
+      
+      .map-container {
+        height: 450px;
+        border-radius: 16px;
+      }
+      
+      .two-column-layout {
+        grid-template-columns: 1fr;
+        gap: 56px;
+      }
+      
+      .two-column-layout.reverse {
+        direction: ltr;
+      }
+      
+      .image-card {
+        padding: 12px;
+        border-radius: 20px;
+      }
+      
+      .text-content h3 {
+        font-size: 26px;
+        margin-bottom: 20px;
+      }
+      
+      .text-content p {
+        font-size: 16px;
+      }
+      
+      .divider {
+        height: 60px;
+      }
+      
+      .divider-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+      }
+      
+      .footer-section {
+        padding: 36px 24px;
+      }
+    }
+  </style>
+  
+  <style>
+    @view-transition { 
+      navigation: auto; 
+    }
+  </style>
+  
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
+</head>
+
+<body>
+  <div class="main-container">
+    
+    <!-- Header -->
+    <header class="header-section">
+      <div class="header-badge">
+        🌍 Sistem Informasi Geografis
+      </div>
+      <h1 class="header-title" id="judul-utama">
+        Analisis Spasial Kesesuaian Lahan Pertanian Kota Samarinda
+      </h1>
+      <p class="header-subtitle" id="subjudul">
+        Berbasis DEMNAS, Elevasi, dan Kemiringan Lereng
+      </p>
+    </header>
+
+    <div class="content-wrapper">
+      
+      <!-- Section: Peta Interaktif -->
+      <section class="section">
+        <div class="section-header">
+          <div class="section-label">
+            Peta Interaktif
+          </div>
+          <h2 class="section-title" id="judul-peta-interaktif">
+            Peta Interaktif Kesesuaian Lahan
+          </h2>
+          <p class="section-description" id="deskripsi-peta">
+            Peta interaktif di bawah ini menampilkan hasil analisis spasial kesesuaian lahan pertanian di Kota Samarinda. Pengguna dapat melakukan zoom in/out untuk melihat detail area tertentu, mengaktifkan atau menonaktifkan layer hasil reclassify elevasi dan kemiringan lereng, serta mengeksplorasi berbagai atribut spasial yang tersedia.
+          </p>
+        </div>
+        
+        <div class="map-wrapper">
+          <div class="map-container">
+            <iframe 
+              src="https://aplintod.github.io/Web-Geomorfologi-UAS-SIG/#11/-0.5442/117.2419" 
+              loading="lazy">
+            </iframe>
+          </div>
+        </div>
+      </section>
+
+      <!-- Divider -->
+      <div class="divider">
+        <div class="divider-icon">🗺️</div>
+      </div>
+      
+      <!-- Section: Peta Klasifikasi Elevasi -->
+      <section class="section">
+        <div class="two-column-layout">
+          
+          <div class="image-card">
+            <!-- Ganti src dengan path file PNG peta elevasi Anda -->
+            <img 
+              src="peta-elevasi.png" 
+              alt="Peta Klasifikasi Elevasi Kota Samarinda" 
+              class="map-image"
+            />
+          </div>
+          
+          <div class="text-content">
+            <div class="text-content-label">
+              📊 Analisis Elevasi
+            </div>
+            <h3 id="judul-elevasi">
+              Peta Klasifikasi Elevasi Kota Samarinda
+            </h3>
+            <p id="deskripsi-elevasi">
+              Berdasarkan analisis data DEMNAS, wilayah Kota Samarinda didominasi oleh dataran rendah dengan elevasi 0–50 meter di atas permukaan laut. Kondisi ini memberikan potensi besar bagi pengembangan lahan pertanian lahan basah seperti padi dan palawija. Namun, dataran rendah juga rentan terhadap genangan dan memerlukan sistem drainase yang baik untuk menjaga produktivitas pertanian dan kualitas tata air.
+            </p>
+          </div>
+          
+        </div>
+      </section>
+
+      <!-- Divider -->
+      <div class="divider">
+        <div class="divider-icon">⛰️</div>
+      </div>
+      
+      <!-- Section: Peta Klasifikasi Kemiringan Lereng -->
+      <section class="section">
+        <div class="two-column-layout reverse">
+          
+          <div class="image-card">
+            <!-- Ganti src dengan path file PNG peta slope Anda -->
+            <img 
+              src="petaslope.png" 
+              alt="Peta Klasifikasi Kemiringan Lereng Kota Samarinda" 
+              class="map-image"
+            />
+          </div>
+          
+          <div class="text-content">
+            <div class="text-content-label">
+              📈 Analisis Kemiringan
+            </div>
+            <h3 id="judul-slope">
+              Peta Klasifikasi Kemiringan Lereng Kota Samarinda
+            </h3>
+            <p id="deskripsi-slope">
+              Peta kemiringan lereng menunjukkan bahwa sebagian besar wilayah Kota Samarinda memiliki lereng datar hingga landai (0–8%). Karakteristik ini sangat menguntungkan untuk kegiatan pertanian karena memungkinkan penggunaan alat mekanisasi pertanian modern dan meminimalkan risiko erosi tanah. Area dengan kemiringan curam (>25%) sebaiknya dipertahankan sebagai zona lindung untuk mencegah longsor dan menjaga keseimbangan ekosistem.
+            </p>
+          </div>
+          
+        </div>
+      </section>
+      
+    </div>
+    
+    <!-- Footer -->
+    <footer class="footer-section">
+      <p class="footer-text" id="teks-footer">
+        Dibuat untuk keperluan akademik – Analisis SIG, 2024
+      </p>
+    </footer>
+    
+  </div>
+  
+  <!-- JavaScript Configuration -->
+  <script>
+    const defaultConfig = {
+      judul_utama: "Analisis Spasial Kesesuaian Lahan Pertanian Kota Samarinda",
+      subjudul: "Berbasis DEMNAS, Elevasi, dan Kemiringan Lereng",
+      judul_peta_interaktif: "Peta Interaktif Kesesuaian Lahan",
+      deskripsi_peta: "Peta interaktif di bawah ini menampilkan hasil analisis spasial kesesuaian lahan pertanian di Kota Samarinda. Pengguna dapat melakukan zoom in/out untuk melihat detail area tertentu, mengaktifkan atau menonaktifkan layer hasil reclassify elevasi dan kemiringan lereng, serta mengeksplorasi berbagai atribut spasial yang tersedia.",
+      judul_elevasi: "Peta Klasifikasi Elevasi Kota Samarinda",
+      deskripsi_elevasi: "Berdasarkan analisis data DEMNAS, wilayah Kota Samarinda didominasi oleh dataran rendah dengan elevasi 0–50 meter di atas permukaan laut. Kondisi ini memberikan potensi besar bagi pengembangan lahan pertanian lahan basah seperti padi dan palawija. Namun, dataran rendah juga rentan terhadap genangan dan memerlukan sistem drainase yang baik untuk menjaga produktivitas pertanian dan kualitas tata air.",
+      judul_slope: "Peta Klasifikasi Kemiringan Lereng Kota Samarinda",
+      deskripsi_slope: "Peta kemiringan lereng menunjukkan bahwa sebagian besar wilayah Kota Samarinda memiliki lereng datar hingga landai (0–8%). Karakteristik ini sangat menguntungkan untuk kegiatan pertanian karena memungkinkan penggunaan alat mekanisasi pertanian modern dan meminimalkan risiko erosi tanah. Area dengan kemiringan curam (>25%) sebaiknya dipertahankan sebagai zona lindung untuk mencegah longsor dan menjaga keseimbangan ekosistem.",
+      teks_footer: "Dibuat untuk keperluan akademik – Analisis SIG, 2024"
+    };
+
+    async function onConfigChange(config) {
+      document.getElementById('judul-utama').textContent = config.judul_utama || defaultConfig.judul_utama;
+      document.getElementById('subjudul').textContent = config.subjudul || defaultConfig.subjudul;
+      document.getElementById('judul-peta-interaktif').textContent = config.judul_peta_interaktif || defaultConfig.judul_peta_interaktif;
+      document.getElementById('deskripsi-peta').textContent = config.deskripsi_peta || defaultConfig.deskripsi_peta;
+      document.getElementById('judul-elevasi').textContent = config.judul_elevasi || defaultConfig.judul_elevasi;
+      document.getElementById('deskripsi-elevasi').textContent = config.deskripsi_elevasi || defaultConfig.deskripsi_elevasi;
+      document.getElementById('judul-slope').textContent = config.judul_slope || defaultConfig.judul_slope;
+      document.getElementById('deskripsi-slope').textContent = config.deskripsi_slope || defaultConfig.deskripsi_slope;
+      document.getElementById('teks-footer').textContent = config.teks_footer || defaultConfig.teks_footer;
+    }
+
+    function mapToCapabilities(config) {
+      return {
+        recolorables: [],
+        borderables: [],
+        fontEditable: undefined,
+        fontSizeable: undefined
+      };
+    }
+
+    function mapToEditPanelValues(config) {
+      return new Map([
+        ["judul_utama", config.judul_utama || defaultConfig.judul_utama],
+        ["subjudul", config.subjudul || defaultConfig.subjudul],
+        ["judul_peta_interaktif", config.judul_peta_interaktif || defaultConfig.judul_peta_interaktif],
+        ["deskripsi_peta", config.deskripsi_peta || defaultConfig.deskripsi_peta],
+        ["judul_elevasi", config.judul_elevasi || defaultConfig.judul_elevasi],
+        ["deskripsi_elevasi", config.deskripsi_elevasi || defaultConfig.deskripsi_elevasi],
+        ["judul_slope", config.judul_slope || defaultConfig.judul_slope],
+        ["deskripsi_slope", config.deskripsi_slope || defaultConfig.deskripsi_slope],
+        ["teks_footer", config.teks_footer || defaultConfig.teks_footer]
+      ]);
+    }
+
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange,
+        mapToCapabilities,
+        mapToEditPanelValues
+      });
+    }
+  </script>
+</body>
+</html>
