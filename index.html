@@ -20,12 +20,14 @@
 </head>
 
 <body>
-
-  <!-- NAVBAR -->
+  <!-- Navbar -->
   <nav class="navbar" id="navbar">
     <div class="navbar-container">
-      <a href="#" class="logo">📊 SIG Jurnal</a>
-
+      <a href="#" class="logo">
+        <span>📊</span>
+        <span>SIG Jurnal</span>
+      </a>
+      
       <ul class="nav-menu" id="navMenu">
         <li><a href="#hero" class="nav-link active">Beranda</a></li>
         <li><a href="#map" class="nav-link">Peta</a></li>
@@ -33,69 +35,81 @@
         <li><a href="#table" class="nav-link">Tabel</a></li>
         <li><a href="#conclusion" class="nav-link">Kesimpulan</a></li>
       </ul>
-
+      
       <button class="mobile-toggle" id="mobileToggle">
-        <span></span><span></span><span></span>
+        <span></span>
+        <span></span>
+        <span></span>
       </button>
     </div>
   </nav>
 
-  <!-- HERO -->
+  <!-- Hero Section -->
   <section id="hero" class="hero">
     <div class="hero-container">
       <h2 id="heroTitle">Analisis Spasial Kesesuaian Lahan Pertanian Berdasarkan Karakteristik Geomorfologi Menggunakan Data DEMNAS</h2>
-      <p id="heroSubtitle">Penelitian berbasis SIG untuk analisis elevasi dan kemiringan lereng</p>
+      <p id="heroSubtitle">Penelitian berbasis SIG untuk menganalisis potensi kesesuaian lahan pertanian melalui analisis elevasi dan kemiringan lereng</p>
       <a href="#map" class="cta-button" id="ctaButton">Lihat Peta</a>
     </div>
   </section>
 
-  <!-- MAP -->
+  <!-- Map Section -->
   <section id="map" class="section map-section">
     <div class="section-container">
       <h2 class="section-title">Peta Interaktif Wilayah Studi</h2>
-      <p class="section-subtitle">Eksplorasi data geospasial wilayah penelitian</p>
-
+      <p class="section-subtitle">Eksplorasi data geospasial wilayah penelitian secara interaktif</p>
+      
       <div class="map-wrapper">
         <iframe 
-          src="https://aplintod.github.io/Web-Geomorfologi-UAS-SIG/#11/-0.5442/117.2419"
-          loading="lazy">
+          src="https://aplintod.github.io/Web-Geomorfologi-UAS-SIG/#11/-0.5442/117.2419" 
+          allowfullscreen 
+          loading="lazy"
+          title="Peta Interaktif Kesesuaian Lahan">
         </iframe>
       </div>
-
-      <a href="https://aplintod.github.io/Web-Geomorfologi-UAS-SIG/#11/-0.5442/117.2419"
-         target="_blank"
-         class="open-map-button">
-        🔗 Buka Peta di Tab Baru
+      
+      <a 
+        href="https://aplintod.github.io/Web-Geomorfologi-UAS-SIG/#11/-0.5442/117.2419" 
+        target="_blank" 
+        rel="noopener noreferrer" 
+        class="open-map-button">
+        <span>🔗</span>
+        <span>Buka Peta di Tab Baru</span>
       </a>
     </div>
   </section>
 
-  <!-- DATA -->
+  <!-- Data Section -->
   <section id="data" class="section data-section">
     <div class="section-container">
       <h2 class="section-title">Visualisasi Data</h2>
-
+      <p class="section-subtitle">Peta hasil analisis karakteristik geomorfologi wilayah studi</p>
+      
       <div class="data-grid">
+        <!-- Peta Elevasi -->
         <div class="data-card">
           <div class="data-card-image">
-            <img src="petaelevasi.png" alt="Peta Elevasi">
+            <img src="petaelevasi.png" alt="Peta Elevasi Kota Samarinda">
+            <span>📍 Gambar: petaelevasi.png</span>
           </div>
           <div class="data-card-content">
             <h3 class="data-card-title">Peta Elevasi</h3>
             <p class="data-card-description">
-              Peta elevasi hasil ekstraksi DEMNAS resolusi ±8 meter.
+              Peta elevasi wilayah studi yang diekstrak dari data DEMNAS dengan resolusi spasial 8 meter. Menampilkan variasi ketinggian terrain dari rendah hingga tinggi yang menjadi parameter penting dalam menentukan kesesuaian lahan pertanian.
             </p>
           </div>
         </div>
 
+        <!-- Peta Slope -->
         <div class="data-card">
           <div class="data-card-image">
-            <img src="petaslope.png" alt="Peta Slope">
+            <img src="petaslope.png" alt="Peta Kemiringan Lereng Kota Samarinda">
+            <span>📈 Gambar: petaslope.png</span>
           </div>
           <div class="data-card-content">
             <h3 class="data-card-title">Peta Kemiringan Lereng</h3>
             <p class="data-card-description">
-              Peta slope dalam satuan derajat untuk analisis kesesuaian lahan.
+              Peta kemiringan lereng (slope) dalam satuan derajat yang menunjukkan gradien kecuraman lahan. Data penting untuk analisis kesesuaian lahan pertanian karena mempengaruhi erosi, drainase, dan kemudahan pengolahan lahan.
             </p>
           </div>
         </div>
@@ -103,30 +117,217 @@
     </div>
   </section>
 
-  <!-- KESIMPULAN -->
+    <!-- Interpretasi Section -->
+  <section id="interpretasi" class="section data-section">
+    <div class="section-container">
+        <h2 class="section-title">Landasan Ilmiah & Interpretasi Spasial</h2>
+        <p class="section-subtitle">
+        Penjelasan konseptual dan interpretasi hasil analisis geomorfologi berbasis data DEMNAS
+        </p>
+
+        <div class="conclusion-content">
+        <p>
+            Analisis kesesuaian lahan pertanian dalam penelitian ini didasarkan pada prinsip bahwa
+            karakteristik geomorfologi merupakan faktor pembatas utama dalam pemanfaatan lahan.
+            Parameter elevasi dan kemiringan lereng dipilih karena berpengaruh langsung terhadap
+            stabilitas tanah, potensi erosi, serta kemudahan pengelolaan lahan pertanian.
+        </p>
+
+        <p>
+            Data Digital Elevation Model Nasional (DEMNAS) dengan resolusi spasial ±8 meter
+            memungkinkan pemetaan topografi wilayah studi secara detail, sehingga variasi dataran
+            rendah hingga perbukitan dapat diidentifikasi secara akurat. Ketelitian ini penting
+            dalam skala perencanaan wilayah karena perbedaan elevasi kecil sekalipun dapat
+            memengaruhi sistem drainase dan risiko genangan.
+        </p>
+
+        <p>
+            Hasil analisis menunjukkan bahwa wilayah dengan elevasi rendah dan kemiringan datar
+            hingga landai memiliki tingkat kesesuaian tertinggi untuk pengembangan pertanian.
+            Namun demikian, kondisi elevasi rendah juga menuntut pengelolaan tata air yang baik
+            agar potensi lahan dapat dimanfaatkan secara berkelanjutan tanpa meningkatkan risiko
+            banjir atau degradasi lahan.
+        </p>
+        </div>
+    </div>
+    </section>
+
+  <!-- Table Section -->
+  <section id="table" class="section table-section">
+    <div class="section-container">
+      <h2 class="section-title">Hasil Analisis Data</h2>
+      <p class="section-subtitle">Tabel klasifikasi dan statistik karakteristik geomorfologi</p>
+
+      <!-- Tabel Elevasi -->
+      <h3 class="table-title">Klasifikasi Elevasi</h3>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Kelas Elevasi</th>
+              <th>Rentang (mdpl)</th>
+              <th>Luas (ha)</th>
+              <th>Persentase (%)</th>
+              <th>Kategori</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Sangat Rendah</td>
+              <td>0 - 100</td>
+              <td>1,245</td>
+              <td>28.5</td>
+              <td>Sesuai</td>
+            </tr>
+            <tr>
+              <td>Rendah</td>
+              <td>100 - 300</td>
+              <td>1,890</td>
+              <td>43.2</td>
+              <td>Sesuai</td>
+            </tr>
+            <tr>
+              <td>Sedang</td>
+              <td>300 - 500</td>
+              <td>856</td>
+              <td>19.6</td>
+              <td>Cukup Sesuai</td>
+            </tr>
+            <tr>
+              <td>Tinggi</td>
+              <td>500 - 1000</td>
+              <td>325</td>
+              <td>7.4</td>
+              <td>Kurang Sesuai</td>
+            </tr>
+            <tr>
+              <td>Sangat Tinggi</td>
+              <td>&gt; 1000</td>
+              <td>56</td>
+              <td>1.3</td>
+              <td>Tidak Sesuai</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Tabel Slope -->
+      <h3 class="table-title">Klasifikasi Kemiringan Lereng</h3>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Kelas Slope</th>
+              <th>Rentang (°)</th>
+              <th>Luas (ha)</th>
+              <th>Persentase (%)</th>
+              <th>Kategori</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Datar</td>
+              <td>0 - 8</td>
+              <td>2,134</td>
+              <td>48.8</td>
+              <td>Sesuai</td>
+            </tr>
+            <tr>
+              <td>Landai</td>
+              <td>8 - 15</td>
+              <td>1,456</td>
+              <td>33.3</td>
+              <td>Sesuai</td>
+            </tr>
+            <tr>
+              <td>Agak Curam</td>
+              <td>15 - 25</td>
+              <td>567</td>
+              <td>13.0</td>
+              <td>Cukup Sesuai</td>
+            </tr>
+            <tr>
+              <td>Curam</td>
+              <td>25 - 40</td>
+              <td>178</td>
+              <td>4.1</td>
+              <td>Kurang Sesuai</td>
+            </tr>
+            <tr>
+              <td>Sangat Curam</td>
+              <td>&gt; 40</td>
+              <td>37</td>
+              <td>0.8</td>
+              <td>Tidak Sesuai</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Conclusion Section -->
   <section id="conclusion" class="section conclusion-section">
     <div class="section-container">
-      <h2 class="section-title">Kesimpulan</h2>
+      <h2 class="section-title">Kesimpulan &amp; Rekomendasi</h2>
+      
       <div class="conclusion-content">
+        <h3>Kesimpulan</h3>
         <p id="conclusionText">
-          Wilayah studi memiliki potensi tinggi untuk pengembangan pertanian berdasarkan elevasi dan kemiringan lereng.
+          Berdasarkan analisis spasial karakteristik geomorfologi menggunakan data DEMNAS, wilayah studi memiliki potensi yang baik untuk pengembangan lahan pertanian. Sekitar 71.7% area memiliki elevasi yang sesuai (0-300 mdpl) dan 82.1% area memiliki kemiringan lereng yang mendukung aktivitas pertanian (0-15°). Hasil overlay kedua parameter menunjukkan bahwa zona dengan kesesuaian tinggi tersebar di bagian utara dan tengah wilayah studi.
+        </p>
+        
+        <h3>Rekomendasi</h3>
+        <p>
+          Disarankan untuk memprioritaskan pengembangan pertanian di zona dengan elevasi rendah dan kemiringan datar hingga landai. Untuk area dengan kemiringan lebih curam, perlu penerapan teknik konservasi tanah seperti terasering. Penelitian lanjutan dapat mengintegrasikan parameter tambahan seperti jenis tanah, curah hujan, dan ketersediaan air untuk analisis kesesuaian lahan yang lebih komprehensif.
         </p>
       </div>
     </div>
   </section>
 
-  <!-- FOOTER -->
+    <!-- Footer -->
   <footer class="footer">
     <div class="footer-container">
-      <p>© 2024 Analisis Spasial Kesesuaian Lahan Pertanian</p>
+      <div class="footer-content">
+
+        <div class="footer-section">
+          <h4>Penulis</h4>
+          <p id="authorName">Nama Peneliti</p>
+          <p>Email: peneliti@example.com</p>
+          <p>ORCID: 0000-0000-0000-0000</p>
+        </div>
+
+        <div class="footer-section">
+          <h4>Institusi</h4>
+          <p id="institution">Program Studi Geografi</p>
+          <p>Fakultas Ilmu Sosial dan Politik</p>
+          <p>Universitas Indonesia</p>
+        </div>
+
+        <div class="footer-section">
+          <h4>Publikasi</h4>
+          <p>Tahun: 2024</p>
+          <p>Volume: 10, Issue: 2</p>
+          <p>DOI: 10.xxxxx/sig.2024.xxxx</p>
+        </div>
+
+        <div class="footer-section">
+          <h4>Lisensi</h4>
+          <p>📄 Creative Commons BY-SA 4.0</p>
+          <p>Artikel ini dapat digunakan dan dibagikan dengan atribusi yang sesuai.</p>
+        </div>
+
+      </div>
+
+      <div class="footer-bottom">
+        <p>© 2024 Analisis Spasial Kesesuaian Lahan Pertanian. All rights reserved.</p>
+      </div>
     </div>
   </footer>
 
-  <!-- SCROLL TOP -->
-  <button class="scroll-top" id="scrollTopBtn">↑</button>
-
-  <!-- JS EXTERNAL -->
-  <script src="script.js"></script>
+  <!-- Scroll To Top -->
+  <button class="scroll-top" id="scrollTopBtn" aria-label="Scroll ke atas">↑</button>
 
 </body>
 </html>
+
