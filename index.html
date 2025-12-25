@@ -647,8 +647,7 @@
   <nav class="navbar" id="navbar">
     <div class="navbar-container">
       <a href="#" class="logo">
-        <span>📊</span>
-        <span>SIG Jurnal</span>
+        <span>Analisis Kesesuaian Lahan untuk Pertanian di Kota Samarinda</span>
       </a>
       
       <ul class="nav-menu" id="navMenu">
@@ -666,15 +665,6 @@
       </button>
     </div>
   </nav>
-
-  <!-- Hero Section -->
-  <section id="hero" class="hero">
-    <div class="hero-container">
-      <h2 id="heroTitle">Analisis Spasial Kesesuaian Lahan Pertanian Berdasarkan Karakteristik Geomorfologi Menggunakan Data DEMNAS</h2>
-      <p id="heroSubtitle">Penelitian berbasis SIG untuk menganalisis potensi kesesuaian lahan pertanian melalui analisis elevasi dan kemiringan lereng</p>
-      <a href="#map" class="cta-button" id="ctaButton">Lihat Peta</a>
-    </div>
-  </section>
 
   <!-- Map Section -->
   <section id="map" class="section map-section">
@@ -713,7 +703,6 @@
         <div class="data-card">
           <div class="data-card-image">
             <img src="petaelevasi.png" alt="Peta Elevasi Kota Samarinda">
-            <span>📍 Gambar: petaelevasi.png</span>
           </div>
           <div class="data-card-content">
             <h3 class="data-card-title">Peta Elevasi</h3>
@@ -727,7 +716,6 @@
         <div class="data-card">
           <div class="data-card-image">
             <img src="petaslope.png" alt="Peta Kemiringan Lereng Kota Samarinda">
-            <span>📈 Gambar: petaslope.png</span>
           </div>
           <div class="data-card-content">
             <h3 class="data-card-title">Peta Kemiringan Lereng</h3>
@@ -782,110 +770,104 @@
       <p class="section-subtitle">Tabel klasifikasi dan statistik karakteristik geomorfologi</p>
 
       <!-- Tabel Elevasi -->
-      <h3 class="table-title">Klasifikasi Elevasi</h3>
+      <h3 class="table-title">Distribusi Wilayah Berdasarkan Klasifikasi Elevasi</h3>
+
       <div class="table-wrapper">
         <table>
           <thead>
             <tr>
-              <th>Kelas Elevasi</th>
-              <th>Rentang (mdpl)</th>
-              <th>Luas (ha)</th>
+              <th>Kelas Elevasi (MDPL)</th>
+              <th>Keterangan</th>
+              <th>Luas (Ha)</th>
               <th>Persentase (%)</th>
-              <th>Kategori</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td>Sangat Rendah</td>
-              <td>0 - 100</td>
-              <td>1,245</td>
-              <td>28.5</td>
-              <td>Sesuai</td>
+              <td>5 – 25</td>
+              <td>Dataran Sangat Rendah</td>
+              <td>42.237,0</td>
+              <td>60,8</td>
             </tr>
             <tr>
-              <td>Rendah</td>
-              <td>100 - 300</td>
-              <td>1,890</td>
-              <td>43.2</td>
-              <td>Sesuai</td>
+              <td>25 – 100</td>
+              <td>Dataran Rendah</td>
+              <td>26.426,8</td>
+              <td>38,1</td>
             </tr>
             <tr>
-              <td>Sedang</td>
-              <td>300 - 500</td>
-              <td>856</td>
-              <td>19.6</td>
-              <td>Cukup Sesuai</td>
+              <td>100 – 200</td>
+              <td>Perbukitan Rendah</td>
+              <td>2.278,7</td>
+              <td>3,3</td>
             </tr>
             <tr>
-              <td>Tinggi</td>
-              <td>500 - 1000</td>
-              <td>325</td>
-              <td>7.4</td>
-              <td>Kurang Sesuai</td>
+              <td>&gt; 200</td>
+              <td>Perbukitan Sedang</td>
+              <td>89,8</td>
+              <td>0,1</td>
             </tr>
             <tr>
-              <td>Sangat Tinggi</td>
-              <td>&gt; 1000</td>
-              <td>56</td>
-              <td>1.3</td>
-              <td>Tidak Sesuai</td>
+              <td colspan="2"><strong>Total</strong></td>
+              <td><strong>69.032,3</strong></td>
+              <td><strong>100</strong></td>
             </tr>
           </tbody>
         </table>
       </div>
 
       <!-- Tabel Slope -->
-      <h3 class="table-title">Klasifikasi Kemiringan Lereng</h3>
+      <h3 class="table-title">Tabel 2. Distribusi Luas Wilayah Berdasarkan Kemiringan Lereng</h3>
+
       <div class="table-wrapper">
         <table>
           <thead>
             <tr>
-              <th>Kelas Slope</th>
-              <th>Rentang (°)</th>
-              <th>Luas (ha)</th>
-              <th>Persentase (%)</th>
-              <th>Kategori</th>
+              <th>Kemiringan (%)</th>
+              <th>Klasifikasi Kesesuaian</th>
+              <th>Keterangan</th>
+              <th>Luas (Ha)</th>
             </tr>
           </thead>
           <tbody>
             <tr>
+              <td>0 – 8</td>
+              <td>Sangat Sesuai (S1)</td>
               <td>Datar</td>
-              <td>0 - 8</td>
-              <td>2,134</td>
-              <td>48.8</td>
-              <td>Sesuai</td>
+              <td>26.762,7</td>
             </tr>
             <tr>
+              <td>8 – 15</td>
+              <td>Cukup Sesuai (S2)</td>
               <td>Landai</td>
-              <td>8 - 15</td>
-              <td>1,456</td>
-              <td>33.3</td>
-              <td>Sesuai</td>
+              <td>12.860,9</td>
             </tr>
             <tr>
+              <td>15 – 25</td>
+              <td>Agak Sesuai (S3)</td>
               <td>Agak Curam</td>
-              <td>15 - 25</td>
-              <td>567</td>
-              <td>13.0</td>
-              <td>Cukup Sesuai</td>
+              <td>14.124,4</td>
             </tr>
             <tr>
+              <td>25 – 40</td>
+              <td>Tidak Sesuai (N)</td>
               <td>Curam</td>
-              <td>25 - 40</td>
-              <td>178</td>
-              <td>4.1</td>
-              <td>Kurang Sesuai</td>
+              <td>13.034,8</td>
             </tr>
             <tr>
-              <td>Sangat Curam</td>
               <td>&gt; 40</td>
-              <td>37</td>
-              <td>0.8</td>
-              <td>Tidak Sesuai</td>
+              <td>Tidak Sesuai (N)</td>
+              <td>Sangat Curam</td>
+              <td>4.059,5</td>
+            </tr>
+            <tr>
+              <td colspan="3"><strong>Total</strong></td>
+              <td><strong>70.842,3</strong></td>
             </tr>
           </tbody>
         </table>
       </div>
+
     </div>
   </section>
 
