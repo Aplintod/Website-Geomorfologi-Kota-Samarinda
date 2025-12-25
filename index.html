@@ -25,6 +25,7 @@
       line-height: 1.6;
       color: #2d3748;
       background-color: #f8f9fa;
+      padding-top: 80px;
     }
 
     /* Navbar Styles */
@@ -121,57 +122,6 @@
       background: #2f855a;
       transition: all 0.3s ease;
       border-radius: 2px;
-    }
-
-    /* Hero Section */
-    .hero {
-      padding: 8rem 2rem 4rem;
-      text-align: center;
-      background: linear-gradient(135deg, #2f855a 0%, #38a169 100%);
-      color: white;
-      position: relative;
-      overflow: hidden;
-      opacity: 0;
-      transform: translateY(20px);
-      transition: all 0.8s ease;
-    }
-
-    .hero::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><rect width="1" height="1" fill="white" opacity="0.1"/></svg>') repeat;
-      opacity: 0.3;
-    }
-
-    .hero.reveal {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .hero-container {
-      max-width: 900px;
-      margin: 0 auto;
-      position: relative;
-      z-index: 1;
-    }
-
-    .hero h2 {
-      font-size: 2.5rem;
-      font-weight: 700;
-      margin-bottom: 1rem;
-      line-height: 1.2;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.2);
-    }
-
-    .hero p {
-      font-size: 1.25rem;
-      margin-bottom: 2rem;
-      opacity: 0.95;
-      text-shadow: 0 1px 5px rgba(0,0,0,0.1);
     }
 
     .cta-button {
@@ -314,22 +264,24 @@
       overflow: hidden;
     }
 
+    .data-card-image {
+      width: 100%;
+      background: #f8f9fa;
+      display: block;
+      position: relative;
+      overflow: visible; /* PENTING */
+      padding: 1rem; /* opsional, biar napas */
+    }
+
     .data-card-image::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: url('data:image/svg+xml,<svg width="40" height="40" xmlns="http://www.w3.org/2000/svg"><circle cx="1" cy="1" r="1" fill="%23a0aec0" opacity="0.2"/></svg>') repeat;
+      display: none; /* hapus pattern, ganggu peta */
     }
 
     .data-card-image img {
       width: 100%;
-      height: 100%;
-      object-fit: contain;
-      position: relative;
-      z-index: 1;
+      height: auto;      /* WAJIB */
+      object-fit: unset; /* JANGAN dipaksa */
+      display: block;
     }
 
     .data-card-content {
@@ -553,18 +505,6 @@
         transform: rotate(-45deg) translate(7px, -7px);
       }
 
-      .hero {
-        padding: 6rem 1.5rem 3rem;
-      }
-
-      .hero h2 {
-        font-size: 1.75rem;
-      }
-
-      .hero p {
-        font-size: 1rem;
-      }
-
       .section {
         padding: 3rem 1.5rem;
       }
@@ -647,11 +587,10 @@
   <nav class="navbar" id="navbar">
     <div class="navbar-container">
       <a href="#" class="logo">
-        <span>Analisis Kesesuaian Lahan untuk Pertanian di Kota Samarinda</span>
+        <span>Analisis Kesesuaian Lahan Pertanian</span>
       </a>
       
       <ul class="nav-menu" id="navMenu">
-        <li><a href="#hero" class="nav-link active">Beranda</a></li>
         <li><a href="#map" class="nav-link">Peta</a></li>
         <li><a href="#data" class="nav-link">Data</a></li>
         <li><a href="#table" class="nav-link">Tabel</a></li>
@@ -963,8 +902,6 @@
        DEFAULT CONFIG (Element SDK)
     =============================== */
     const defaultConfig = {
-      hero_title: "Analisis Spasial Kesesuaian Lahan Pertanian Berdasarkan Karakteristik Geomorfologi Menggunakan Data DEMNAS",
-      hero_subtitle: "Penelitian berbasis SIG untuk menganalisis potensi kesesuaian lahan pertanian melalui analisis elevasi dan kemiringan lereng",
       cta_button: "Lihat Peta",
       conclusion_text:
       "Pemanfaatan data DEMNAS dengan resolusi spasial 0,27 arc-second terbukti efektif dalam memetakan variasi topografi Kota Samarinda secara detail. Wilayah ini didominasi oleh dataran rendah dengan elevasi −5 hingga 25 MDPL seluas 42.237,0 hektar. Evaluasi kemiringan lereng menunjukkan bahwa lahan dengan kategori sangat sesuai (0–8%) mencakup 26.762,7 hektar dan terkonsentrasi di Kecamatan Palaran dan Sambutan, sehingga berpotensi tinggi untuk pengembangan pertanian pangan berkelanjutan dengan pengelolaan tata air yang memadai.",
@@ -1062,15 +999,11 @@
        ELEMENT SDK BINDING
     =============================== */
     async function onConfigChange(config) {
-      const heroTitle = document.getElementById("heroTitle");
-      const heroSubtitle = document.getElementById("heroSubtitle");
       const ctaButton = document.getElementById("ctaButton");
       const conclusionText = document.getElementById("conclusionText");
       const authorName = document.getElementById("authorName");
       const institution = document.getElementById("institution");
 
-      if (heroTitle) heroTitle.textContent = config.hero_title || defaultConfig.hero_title;
-      if (heroSubtitle) heroSubtitle.textContent = config.hero_subtitle || defaultConfig.hero_subtitle;
       if (ctaButton) ctaButton.textContent = config.cta_button || defaultConfig.cta_button;
       if (conclusionText) conclusionText.textContent = config.conclusion_text || defaultConfig.conclusion_text;
       if (authorName) authorName.textContent = config.author_name || defaultConfig.author_name;
