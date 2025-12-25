@@ -4,19 +4,642 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Analisis Spasial Kesesuaian Lahan Pertanian - Jurnal SIG</title>
-
-  <!-- Google Font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-  <!-- CSS EXTERNAL -->
-  <link rel="stylesheet" href="style.css">
-
-  <!-- SDK & Tailwind (tetap kalau mau dipakai) -->
   <script src="/_sdk/element_sdk.js"></script>
-  <script src="/_sdk/data_sdk.js"></script>
-  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      line-height: 1.6;
+      color: #2d3748;
+      background-color: #f8f9fa;
+    }
+
+    /* Navbar Styles */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      z-index: 1000;
+      transition: all 0.3s ease;
+    }
+
+    .navbar.scrolled {
+      background: rgba(255, 255, 255, 0.98);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+
+    .navbar-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #2f855a;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: transform 0.3s ease;
+    }
+
+    .logo:hover {
+      transform: scale(1.05);
+    }
+
+    .nav-menu {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-link {
+      color: #4a5568;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s ease;
+      position: relative;
+      padding: 0.5rem 0;
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+      color: #2f855a;
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: #2f855a;
+      transition: width 0.3s ease;
+    }
+
+    .nav-link:hover::after,
+    .nav-link.active::after {
+      width: 100%;
+    }
+
+    .mobile-toggle {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 5px;
+    }
+
+    .mobile-toggle span {
+      width: 25px;
+      height: 3px;
+      background: #2f855a;
+      transition: all 0.3s ease;
+      border-radius: 2px;
+    }
+
+    /* Hero Section */
+    .hero {
+      padding: 8rem 2rem 4rem;
+      text-align: center;
+      background: linear-gradient(135deg, #2f855a 0%, #38a169 100%);
+      color: white;
+      position: relative;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.8s ease;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><rect width="1" height="1" fill="white" opacity="0.1"/></svg>') repeat;
+      opacity: 0.3;
+    }
+
+    .hero.reveal {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .hero-container {
+      max-width: 900px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero h2 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      line-height: 1.2;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+
+    .hero p {
+      font-size: 1.25rem;
+      margin-bottom: 2rem;
+      opacity: 0.95;
+      text-shadow: 0 1px 5px rgba(0,0,0,0.1);
+    }
+
+    .cta-button {
+      display: inline-block;
+      padding: 1rem 2.5rem;
+      background: white;
+      color: #2f855a;
+      text-decoration: none;
+      font-weight: 600;
+      border-radius: 50px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    .cta-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+      background: #f7fafc;
+    }
+
+    /* Section Styles */
+    .section {
+      padding: 4rem 2rem;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.8s ease;
+    }
+
+    .section.reveal {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .section-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #2d3748;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .section-subtitle {
+      font-size: 1.1rem;
+      color: #718096;
+      margin-bottom: 3rem;
+      text-align: center;
+    }
+
+    /* Map Section */
+    .map-section {
+      background: white;
+    }
+
+    .map-wrapper {
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%;
+      margin-bottom: 1.5rem;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+    }
+
+    .map-wrapper:hover {
+      box-shadow: 0 15px 50px rgba(0,0,0,0.15);
+      transform: translateY(-5px);
+    }
+
+    .map-wrapper iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .open-map-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      background: #2f855a;
+      color: white;
+      text-decoration: none;
+      border-radius: 10px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(47, 133, 90, 0.3);
+    }
+
+    .open-map-button:hover {
+      background: #276749;
+      transform: translateX(5px);
+      box-shadow: 0 6px 20px rgba(47, 133, 90, 0.4);
+    }
+
+    /* Data Section */
+    .data-section {
+      background: #f8f9fa;
+    }
+
+    .data-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 4rem;
+      margin-top: 2rem;
+    }
+
+    .data-card {
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      transition: all 0.4s ease;
+    }
+
+    .data-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+    }
+
+    .data-card-image {
+      width: 100%;
+      min-height: 400px;
+      max-height: 600px;
+      background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e0 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #a0aec0;
+      font-size: 1.1rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .data-card-image::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg width="40" height="40" xmlns="http://www.w3.org/2000/svg"><circle cx="1" cy="1" r="1" fill="%23a0aec0" opacity="0.2"/></svg>') repeat;
+    }
+
+    .data-card-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      position: relative;
+      z-index: 1;
+    }
+
+    .data-card-content {
+      padding: 2.5rem;
+    }
+
+    .data-card-title {
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: #2d3748;
+      margin-bottom: 1.25rem;
+      text-align: center;
+    }
+
+    .data-card-description {
+      color: #4a5568;
+      font-size: 1.05rem;
+      line-height: 1.8;
+      text-align: center;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    /* Table Section */
+    .table-section {
+      background: white;
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+      margin-top: 2rem;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .table-title {
+      margin-top: 3rem;
+      margin-bottom: 1rem;
+      color: #2d3748;
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .table-title:first-of-type {
+      margin-top: 2rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+    }
+
+    thead {
+      background: linear-gradient(135deg, #2f855a 0%, #38a169 100%);
+      color: white;
+    }
+
+    th, td {
+      padding: 1.25rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    th {
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    tbody tr {
+      transition: all 0.2s ease;
+    }
+
+    tbody tr:hover {
+      background: #f7fafc;
+      transform: scale(1.01);
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* Conclusion Section */
+    .conclusion-section {
+      background: linear-gradient(135deg, #f8f9fa 0%, #e2e8f0 100%);
+    }
+
+    .conclusion-content {
+      max-width: 850px;
+      margin: 0 auto;
+      background: white;
+      padding: 2.5rem;
+      border-radius: 16px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    }
+
+    .conclusion-content h3 {
+      color: #2f855a;
+      font-size: 1.75rem;
+      margin-bottom: 1.25rem;
+      font-weight: 600;
+    }
+
+    .conclusion-content p {
+      color: #4a5568;
+      margin-bottom: 1.5rem;
+      line-height: 1.9;
+      font-size: 1.05rem;
+    }
+
+    .conclusion-content p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Footer */
+    .footer {
+      background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+      color: white;
+      padding: 3rem 2rem 2rem;
+    }
+
+    .footer-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .footer-content {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .footer-section h4 {
+      color: #48bb78;
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .footer-section p {
+      color: #cbd5e0;
+      margin-bottom: 0.75rem;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid #4a5568;
+      padding-top: 1.5rem;
+      text-align: center;
+      color: #cbd5e0;
+      font-size: 0.9rem;
+    }
+
+    /* Scroll to Top Button */
+    .scroll-top {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 50px;
+      height: 50px;
+      background: #2f855a;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      font-size: 1.5rem;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 15px rgba(47, 133, 90, 0.4);
+      transition: all 0.3s ease;
+      z-index: 999;
+    }
+
+    .scroll-top.show {
+      display: flex;
+    }
+
+    .scroll-top:hover {
+      background: #276749;
+      transform: translateY(-5px);
+      box-shadow: 0 6px 20px rgba(47, 133, 90, 0.5);
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+      .nav-menu {
+        position: fixed;
+        left: -100%;
+        top: 70px;
+        flex-direction: column;
+        background: white;
+        width: 100%;
+        padding: 2rem;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        transition: left 0.3s ease;
+        gap: 1rem;
+      }
+
+      .nav-menu.active {
+        left: 0;
+      }
+
+      .mobile-toggle {
+        display: flex;
+      }
+
+      .mobile-toggle.active span:nth-child(1) {
+        transform: rotate(45deg) translate(8px, 8px);
+      }
+
+      .mobile-toggle.active span:nth-child(2) {
+        opacity: 0;
+      }
+
+      .mobile-toggle.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(7px, -7px);
+      }
+
+      .hero {
+        padding: 6rem 1.5rem 3rem;
+      }
+
+      .hero h2 {
+        font-size: 1.75rem;
+      }
+
+      .hero p {
+        font-size: 1rem;
+      }
+
+      .section {
+        padding: 3rem 1.5rem;
+      }
+
+      .section-title {
+        font-size: 1.75rem;
+      }
+
+      .section-subtitle {
+        font-size: 1rem;
+      }
+
+      .data-card-image {
+        min-height: 250px;
+        max-height: 400px;
+      }
+
+      .data-card-content {
+        padding: 1.5rem;
+      }
+
+      .data-card-title {
+        font-size: 1.5rem;
+      }
+
+      .data-card-description {
+        font-size: 1rem;
+      }
+
+      .navbar-container {
+        padding: 1rem;
+      }
+
+      .conclusion-content {
+        padding: 1.75rem;
+      }
+
+      .footer-content {
+        gap: 2rem;
+      }
+
+      .scroll-top {
+        bottom: 1.5rem;
+        right: 1.5rem;
+        width: 45px;
+        height: 45px;
+      }
+
+      th, td {
+        padding: 1rem 0.75rem;
+        font-size: 0.9rem;
+      }
+    }
+
+    /* Loading Animation */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+  
+  <style>
+    @view-transition { 
+      navigation: auto; 
+    }
+  </style>
+  
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
 </head>
 
 <body>
@@ -328,6 +951,133 @@
   <!-- Scroll To Top -->
   <button class="scroll-top" id="scrollTopBtn" aria-label="Scroll ke atas">↑</button>
 
+  <!-- SCRIPT -->
+  <script>
+    /* ===============================
+       DEFAULT CONFIG (Element SDK)
+    =============================== */
+    const defaultConfig = {
+      hero_title: "Analisis Spasial Kesesuaian Lahan Pertanian Berdasarkan Karakteristik Geomorfologi Menggunakan Data DEMNAS",
+      hero_subtitle: "Penelitian berbasis SIG untuk menganalisis potensi kesesuaian lahan pertanian melalui analisis elevasi dan kemiringan lereng",
+      cta_button: "Lihat Peta",
+      conclusion_text:
+        "Berdasarkan analisis spasial karakteristik geomorfologi menggunakan data DEMNAS, wilayah studi memiliki potensi yang baik untuk pengembangan lahan pertanian. Zona dengan kesesuaian tinggi terkonsentrasi pada wilayah dengan elevasi rendah dan kemiringan datar hingga landai.",
+      author_name: "Nama Peneliti",
+      institution: "Program Studi Geografi"
+    };
+
+    /* ===============================
+       MOBILE NAV TOGGLE
+    =============================== */
+    const mobileToggle = document.getElementById("mobileToggle");
+    const navMenu = document.getElementById("navMenu");
+
+    mobileToggle.addEventListener("click", () => {
+      navMenu.classList.toggle("active");
+      mobileToggle.classList.toggle("active");
+    });
+
+    document.querySelectorAll(".nav-link").forEach(link => {
+      link.addEventListener("click", () => {
+        navMenu.classList.remove("active");
+        mobileToggle.classList.remove("active");
+      });
+    });
+
+    /* ===============================
+       NAVBAR SCROLL EFFECT
+    =============================== */
+    const navbar = document.getElementById("navbar");
+
+    window.addEventListener("scroll", () => {
+      navbar.classList.toggle("scrolled", window.scrollY > 50);
+    });
+
+    /* ===============================
+       SCROLLSPY
+    =============================== */
+    const sections = document.querySelectorAll("section[id]");
+    const navLinks = document.querySelectorAll(".nav-link");
+
+    function updateActiveNav() {
+      const scrollY = window.pageYOffset;
+
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop - 120;
+        const sectionHeight = section.offsetHeight;
+        const id = section.getAttribute("id");
+
+        if (scrollY >= sectionTop && scrollY < sectionTop + sectionHeight) {
+          navLinks.forEach(link => {
+            link.classList.toggle(
+              "active",
+              link.getAttribute("href") === `#${id}`
+            );
+          });
+        }
+      });
+    }
+
+    window.addEventListener("scroll", updateActiveNav);
+
+    /* ===============================
+       REVEAL ANIMATION
+    =============================== */
+    const revealElements = document.querySelectorAll(".hero, .section");
+
+    const revealObserver = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("reveal");
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.12 }
+    );
+
+    revealElements.forEach(el => revealObserver.observe(el));
+
+    /* ===============================
+       SCROLL TO TOP
+    =============================== */
+    const scrollTopBtn = document.getElementById("scrollTopBtn");
+
+    window.addEventListener("scroll", () => {
+      scrollTopBtn.classList.toggle("show", window.scrollY > 400);
+    });
+
+    scrollTopBtn.addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    /* ===============================
+       ELEMENT SDK BINDING
+    =============================== */
+    async function onConfigChange(config) {
+      const heroTitle = document.getElementById("heroTitle");
+      const heroSubtitle = document.getElementById("heroSubtitle");
+      const ctaButton = document.getElementById("ctaButton");
+      const conclusionText = document.getElementById("conclusionText");
+      const authorName = document.getElementById("authorName");
+      const institution = document.getElementById("institution");
+
+      if (heroTitle) heroTitle.textContent = config.hero_title || defaultConfig.hero_title;
+      if (heroSubtitle) heroSubtitle.textContent = config.hero_subtitle || defaultConfig.hero_subtitle;
+      if (ctaButton) ctaButton.textContent = config.cta_button || defaultConfig.cta_button;
+      if (conclusionText) conclusionText.textContent = config.conclusion_text || defaultConfig.conclusion_text;
+      if (authorName) authorName.textContent = config.author_name || defaultConfig.author_name;
+      if (institution) institution.textContent = config.institution || defaultConfig.institution;
+    }
+
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange
+      });
+    }
+  </script>
+
 </body>
 </html>
-
